@@ -1,22 +1,26 @@
 
 # 📇 Contact Management API (Full Authentication)
 
-A production-ready **Contact Management REST API** built with **Express.js**, **MongoDB**, **JWT Authentication**, and **bcrypt password hashing**.  
-The API allows users to **register, login**, and perform **CRUD operations on contacts** with **secure, user-based authorization**.
+A production-ready Contact Management REST API built using Node.js, Express.js, and MongoDB, featuring JWT-based authentication and bcrypt password hashing.
+The application enables users to register and log in securely and perform CRUD operations on contacts with user-specific authorization, ensuring that each user can only access their own data.
 
-This project follows a **clean MVC architecture** and is structured to support **Dockerization and CI/CD pipelines (Jenkins)** in upcoming iterations.
+The backend has been fully Dockerized following production best practices. A multi-stage Docker build was implemented to optimize the image, achieving a ~14% reduction in image size (235MB → 203MB) by separating build-time and runtime dependencies. The application and database are orchestrated using Docker Compose, with MongoDB data persistence ensured through named Docker volumes to prevent data loss across container restarts.
+
+Additionally, health checks were added to monitor service availability, and environment variables are managed securely to support different deployment environments. The overall setup is designed to be CI/CD ready, with future integration planned using Jenkins for automated builds, testing, and deployments.
 
 ---
 
 ## 🚀 Features
 
-- User Registration & Login
-- JWT-based Authentication
-- Password Encryption using bcrypt
-- Secure Contact CRUD APIs
-- User-specific contact access
-- Clean & scalable folder structure
-- Ready for Docker & Jenkins integration
+- 🔽 ~14% Docker image size reduction using multi-stage builds
+
+- 💾 100% data persistence using MongoDB Docker volumes
+
+- 🔐 JWT-secured APIs with authenticated CRUD operations
+
+- ♻️ Zero data loss on container restart (docker-compose down/up)
+
+- 🩺 Health checks implemented for backend and database readiness
 
 ---
 
@@ -52,7 +56,10 @@ contact-auth-api/
 │   ├── middlewares/
 │   │   └── authMiddleware.js
 │
-├── .env.example
+├── .env
+├── .dockerignore
+├──  Dockerfile
+├──  docker-compose.yml
 ├── package.json
 ├── README.md
 ```
@@ -99,26 +106,56 @@ Create a `.env` file using `.env.example`:
 
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+MONGO_URI=mongodb://mongo:27017/contactdb
+JWT_SECRET=your_jwt_secret_key
+
 ```
 
 ---
 
-## ▶️ Run the Project Locally
+##  🐳 Docker Local Setup  and ▶️ Run the Project Locally
+
+Clone the Project Repository
 
 ```bash
-npm install
-npm run dev
-```
-
-Server will start at:
+git clone ritikkumar55/Contact-Auth-API.git
+cd contact-auth-api
 
 ```
-http://localhost:5000
+
+Build and Run the Application with Docker Compose
+
+```
+docker-compose up --build -d
+
+```
+
+Verify Running Containers
+
+```
+docker ps
+
+```
+Output: 
+```
+contact-auth-api-api   Up (healthy)
+mongo                  Up (healthy)
+
+```
+Test the Application
+```
+curl http://localhost:5000/health
+Expected respose:
+{ "status": "OK" }
+
 ```
 
 ---
+
+##
+
+```
+```
 
 ## 🧠 Security Practices Used
 
@@ -131,8 +168,8 @@ http://localhost:5000
 
 ## 🧩 Upcoming Enhancements
 
-- Dockerize application using multi-stage builds
-- Docker Compose for API + MongoDB
+- Dockerize application using multi-stage builds ✅
+- Docker Compose for API + MongoDB ✅
 - Jenkins CI/CD pipeline
 - Automated testing
 - Deployment on AWS EC2
